@@ -52,5 +52,7 @@
 	"license": "ISC",
 	"name": "foobar_factory",
 	"version": "1.0.0",
-	"scripts": {}
+	"scripts": {
+		"dev-server": "webpack-dev-server --config scripts/dev-config.js --color --progress --stats-error-details"
+	}
 }
