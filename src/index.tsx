@@ -4,7 +4,8 @@ import logger from "redux-logger";
 import { Provider as StoreProvider } from "react-redux";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { v4 as uuidv4 } from "uuid";
-import { data as dataReducer } from "./Store/Record/reducers";
+import createSagaMiddleware from "redux-saga";
+import { record as recordReducer } from "./Store/Record/reducers";
 import { Robot, Tasks } from "./Classes/Robot";
 
 const ROBOTS: Robot[] = new Array(2).fill({ class: "robot" }).map((robot) => ({
@@ -24,15 +25,17 @@ const EMPTY_DATA_STATE = {
 		{},
 	),
 };
+const sagaMiddleware = createSagaMiddleware();
 
 const middlewares = [];
+middlewares.push(sagaMiddleware);
 if (process.env.NODE_ENV === "development") {
 	middlewares.push(logger);
 }
 
 const store = createStore(
 	combineReducers({
-		record: dataReducer(EMPTY_DATA_STATE),
+		record: recordReducer(EMPTY_DATA_STATE),
 	}),
 	applyMiddleware(...middlewares),
 );
