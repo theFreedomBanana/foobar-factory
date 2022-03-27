@@ -4,11 +4,13 @@ import { Dispatch } from "redux";
 import { createSelector } from "reselect";
 import { v4 as uuidv4 } from "uuid";
 import { Robot, Tasks } from "../../Classes/Robot";
+import { customSetInterval, randomNumberBetween } from "../../Helpers";
 import { Store } from "../../Store";
 import { RECORD_ACTIONS } from "../../Store/Record/actions";
 
 // #region TYPES
 interface FactoryProps {
+	barMiners?: Robot[];
 	dispatch: Dispatch;
 	fooMiners?: Robot[];
 }
@@ -24,14 +26,24 @@ const selectFooMiners = createSelector(
 	},
 );
 
+const selectBarMiners = createSelector(
+	[(store) => store.record.robot],
+	(robotPerId) => {
+		const miners: Robot[] | undefined = robotPerId ? Object.values(robotPerId) : undefined;
+
+		return miners?.filter((robot) => robot.currentTask === Tasks.MINE_BAR);
+	},
+);
+
 const mapStateToProps = (store: Store) => ({
+	barMiners: selectBarMiners(store),
 	fooMiners: selectFooMiners(store),
 });
 // #endregion
 
 // #region COMPONENT
 const application = memo(
-	({ dispatch, fooMiners }: FactoryProps) => {
+	({ barMiners, dispatch, fooMiners }: FactoryProps) => {
 
 		useEffect(
 			() => {
@@ -45,6 +57,18 @@ const application = memo(
 				});
 			},
 			[dispatch, fooMiners],
+		);
+
+		useEffect(
+			() => {
+				barMiners?.forEach(() => {
+					customSetInterval({
+						callback: () => dispatch({ records: [{ class: "bar", id: uuidv4() }], type: RECORD_ACTIONS.CREATE_RECORDS }),
+						setIntervalDuration: () => randomNumberBetween({ maxValue: 2, minValue: 0.5 }) * 1000,
+					});
+				});
+			},
+			[dispatch, barMiners],
 		);
 
 		return null;
