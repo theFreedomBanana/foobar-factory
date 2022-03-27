@@ -1,4 +1,4 @@
-import { memo, useEffect } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { createSelector } from "reselect";
@@ -13,6 +13,7 @@ interface FactoryProps {
 	barMiners?: Robot[];
 	dispatch: Dispatch;
 	fooMiners?: Robot[];
+	foobarEngineers?: Robot[];
 }
 // #endregion
 
@@ -35,15 +36,27 @@ const selectBarMiners = createSelector(
 	},
 );
 
+const selectFoobarEngineers = createSelector(
+	[(store) => store.record.robot],
+	(robotPerId) => {
+		const miners: Robot[] | undefined = robotPerId ? Object.values(robotPerId) : undefined;
+
+		return miners?.filter((robot) => robot.currentTask === Tasks.ASSEMBLE_FOOBAR);
+	},
+);
+
 const mapStateToProps = (store: Store) => ({
 	barMiners: selectBarMiners(store),
 	fooMiners: selectFooMiners(store),
+	foobarEngineers: selectFoobarEngineers(store),
 });
 // #endregion
 
 // #region COMPONENT
 const application = memo(
-	({ barMiners, dispatch, fooMiners }: FactoryProps) => {
+	(props: FactoryProps) => {
+		const { barMiners, dispatch, fooMiners, foobarEngineers } = props;
+		const [foobarIntervals, updateFoobarIntervals] = useState<{ [robotId: string]: NodeJS.Timer }>();
 
 		useEffect(
 			() => {
@@ -69,6 +82,30 @@ const application = memo(
 				});
 			},
 			[dispatch, barMiners],
+		);
+
+		const reference = useRef<FactoryProps>();
+		useEffect(() => {
+			reference.current = props;
+		});
+		const previousProps = reference.current;
+
+		useEffect(
+			() => {
+				if (previousProps?.foobarEngineers !== foobarEngineers) {
+					Object.values(foobarIntervals || {}).forEach(clearInterval);
+					foobarEngineers?.forEach(({ id }) => {
+						const interval = setInterval(
+							() => {
+								dispatch({ records: [{ class: "foobar", id: uuidv4() }], type: RECORD_ACTIONS.ASSEMBLING });
+							},
+							2000,
+						);
+						updateFoobarIntervals({ ...foobarIntervals, [id]: interval });
+					});
+				}
+			},
+			[dispatch, foobarEngineers, foobarIntervals, previousProps, updateFoobarIntervals],
 		);
 
 		return null;

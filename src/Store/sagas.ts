@@ -17,12 +17,23 @@ function* mining(actionParams: RecordsActionParams) {
 	yield put({ records: actionParams.records, type: RECORD_ACTIONS.CREATE_RECORDS });
 }
 
+function* useRecords(actionParams: RecordsActionParams) {
+	if (actionParams.type === RECORD_ACTIONS.ASSEMBLING) {
+		yield put({ records: actionParams.records, type: RECORD_ACTIONS.ASSEMBLE_FOOBAR });
+	}
+}
+
 export function* sagaForMining() {
 	yield takeEvery([RECORD_ACTIONS.MINING], mining);
+}
+
+export function* sagaForAssembling() {
+	yield takeEvery([RECORD_ACTIONS.ASSEMBLING], useRecords);
 }
 
 export function* sagasForFactory() {
 	yield all([
 		sagaForMining(),
+		sagaForAssembling(),
 	]);
 }
