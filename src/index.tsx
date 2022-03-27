@@ -7,6 +7,8 @@ import { v4 as uuidv4 } from "uuid";
 import createSagaMiddleware from "redux-saga";
 import { record as recordReducer } from "./Store/Record/reducers";
 import { Robot, Tasks } from "./Classes/Robot";
+import { Factory } from "./Components/Application";
+import { sagasForFactory } from "./Store/sagas";
 
 const ROBOTS: Robot[] = new Array(2).fill({ class: "robot" }).map((robot) => ({
 	...robot,
@@ -26,7 +28,6 @@ const EMPTY_DATA_STATE = {
 	),
 };
 const sagaMiddleware = createSagaMiddleware();
-
 const middlewares = [];
 middlewares.push(sagaMiddleware);
 if (process.env.NODE_ENV === "development") {
@@ -40,9 +41,12 @@ const store = createStore(
 	applyMiddleware(...middlewares),
 );
 
+sagaMiddleware.run(sagasForFactory);
+
 const App = () => (
 	<StoreProvider store={store}>
 		<h1>Hello World!</h1>
+		<Factory />
 	</StoreProvider>
 );
 

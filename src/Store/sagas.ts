@@ -1,4 +1,4 @@
-import { put, takeEvery } from "redux-saga/effects";
+import { all, put, takeEvery } from "redux-saga/effects";
 import { ClassEnumeration, ValueOf } from "../Classes";
 import { RECORD_ACTIONS } from "./Record/actions";
 
@@ -13,12 +13,16 @@ interface RecordsActionParams {
 	readonly type: RECORD_ACTIONS;
 }
 
-function* updateRecordTable(actionParams: RecordsActionParams) {
-	if (actionParams.type === RECORD_ACTIONS.CREATE_RECORDS) {
-		yield put({ records: actionParams.records, type: RECORD_ACTIONS.CREATE_RECORDS });
-	}
+function* mining(actionParams: RecordsActionParams) {
+	yield put({ records: actionParams.records, type: RECORD_ACTIONS.CREATE_RECORDS });
 }
 
-export function* sagaForRecords() {
-	yield takeEvery([RECORD_ACTIONS.CREATE_RECORDS, RECORD_ACTIONS.DELETE_RECORDS], updateRecordTable);
+export function* sagaForMining() {
+	yield takeEvery([RECORD_ACTIONS.MINING], mining);
+}
+
+export function* sagasForFactory() {
+	yield all([
+		sagaForMining(),
+	]);
 }

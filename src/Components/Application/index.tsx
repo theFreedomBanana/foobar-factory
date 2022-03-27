@@ -50,7 +50,7 @@ const application = memo(
 				fooMiners?.forEach(() => {
 					setInterval(
 						() => {
-							dispatch({ records: [{ class: "foo", id: uuidv4() }], type: RECORD_ACTIONS.CREATE_RECORDS });
+							dispatch({ records: [{ class: "foo", id: uuidv4() }], type: RECORD_ACTIONS.MINING });
 						},
 						1000,
 					);
@@ -63,7 +63,7 @@ const application = memo(
 			() => {
 				barMiners?.forEach(() => {
 					customSetInterval({
-						callback: () => dispatch({ records: [{ class: "bar", id: uuidv4() }], type: RECORD_ACTIONS.CREATE_RECORDS }),
+						callback: () => dispatch({ records: [{ class: "bar", id: uuidv4() }], type: RECORD_ACTIONS.MINING }),
 						setIntervalDuration: () => randomNumberBetween({ maxValue: 2, minValue: 0.5 }) * 1000,
 					});
 				});
@@ -72,7 +72,7 @@ const application = memo(
 		);
 
 		return null;
-	}
+	},
 );
 // #endregion
 
