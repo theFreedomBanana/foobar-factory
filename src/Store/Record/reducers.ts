@@ -45,6 +45,22 @@ export const record = (
 
 			return nextState;
 		}
+	} else if (payload.type === RECORD_ACTIONS.CREATE_ROBOT) {
+		const nextState = { ...state };
+		if (payload.records[0].class === "robot" && Object.keys(state.foobar || {}).length >= 3 && Object.keys(state.foo || {}).length >= 6) {
+			for (let i = 0; i < 3; i++) {
+				delete nextState.foobar?.[Object.keys(state.foobar || {})[0]];
+			}
+			for (let i = 0; i < 6; i++) {
+				delete nextState.foo?.[Object.keys(state.foo || {})[0]];
+			}
+			nextState.robot = { ...nextState.robot, [payload.records[0].id]: { ...payload.records[0] } };
+
+			return nextState;
+		} else {
+
+			return state;
+		}
 	} else {
 
 		return state;

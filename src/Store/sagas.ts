@@ -20,6 +20,8 @@ function* mining(actionParams: RecordsActionParams) {
 function* useRecords(actionParams: RecordsActionParams) {
 	if (actionParams.type === RECORD_ACTIONS.ASSEMBLING) {
 		yield put({ records: actionParams.records, type: RECORD_ACTIONS.ASSEMBLE_FOOBAR });
+	} else if (actionParams.type === RECORD_ACTIONS.BUYING) {
+		yield put({ records: actionParams.records, type: RECORD_ACTIONS.CREATE_ROBOT });
 	}
 }
 
@@ -28,7 +30,7 @@ export function* sagaForMining() {
 }
 
 export function* sagaForAssembling() {
-	yield takeEvery([RECORD_ACTIONS.ASSEMBLING], useRecords);
+	yield takeEvery([RECORD_ACTIONS.ASSEMBLING, RECORD_ACTIONS.BUYING], useRecords);
 }
 
 export function* sagasForFactory() {

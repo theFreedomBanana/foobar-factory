@@ -11,6 +11,7 @@ import { RECORD_ACTIONS } from "../../Store/Record/actions";
 // #region TYPES
 interface FactoryProps {
 	barMiners?: Robot[];
+	byers?: Robot[];
 	dispatch: Dispatch;
 	fooMiners?: Robot[];
 	foobarEngineers?: Robot[];
@@ -45,8 +46,18 @@ const selectFoobarEngineers = createSelector(
 	},
 );
 
+const selectByers = createSelector(
+	[(store) => store.record.robot],
+	(robotPerId) => {
+		const miners: Robot[] | undefined = robotPerId ? Object.values(robotPerId) : undefined;
+
+		return miners?.filter((robot) => robot.currentTask === Tasks.BUY_ROBOT);
+	},
+);
+
 const mapStateToProps = (store: Store) => ({
 	barMiners: selectBarMiners(store),
+	byers: selectByers(store),
 	fooMiners: selectFooMiners(store),
 	foobarEngineers: selectFoobarEngineers(store),
 });
@@ -55,8 +66,9 @@ const mapStateToProps = (store: Store) => ({
 // #region COMPONENT
 const application = memo(
 	(props: FactoryProps) => {
-		const { barMiners, dispatch, fooMiners, foobarEngineers } = props;
+		const { barMiners, byers, dispatch, fooMiners, foobarEngineers } = props;
 		const [foobarIntervals, updateFoobarIntervals] = useState<{ [robotId: string]: NodeJS.Timer }>();
+		const [byersIntervals, updateByersIntervals] = useState<{ [robotId: string]: NodeJS.Timer }>();
 
 		useEffect(
 			() => {
@@ -106,6 +118,23 @@ const application = memo(
 				}
 			},
 			[dispatch, foobarEngineers, foobarIntervals, previousProps, updateFoobarIntervals],
+		);
+
+		useEffect(
+			() => {
+				if (previousProps?.byers !== byers) {
+					byers?.forEach(({ id }) => {
+						const interval = setInterval(
+							() => {
+								dispatch({ records: [{ class: "robot", currentTask: Tasks.NONE, id: uuidv4() }], type: RECORD_ACTIONS.BUYING });
+							},
+							10000,
+						);
+						updateByersIntervals({ ...byersIntervals, [id]: interval });
+					});
+				}
+			},
+			[byers, byersIntervals, dispatch, previousProps?.byers],
 		);
 
 		return null;
