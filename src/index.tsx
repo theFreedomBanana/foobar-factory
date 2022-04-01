@@ -1,3 +1,4 @@
+import { CssBaseline } from "@material-ui/core";
 import React from "react";
 import ReactDOM from "react-dom";
 import logger from "redux-logger";
@@ -45,7 +46,7 @@ sagaMiddleware.run(sagasForFactory);
 
 const App = () => (
 	<StoreProvider store={store}>
-		<h1>Hello World!</h1>
+		<CssBaseline />
 		<Factory />
 	</StoreProvider>
 );
