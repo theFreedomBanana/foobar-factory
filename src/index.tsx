@@ -6,6 +6,7 @@ import { Provider as StoreProvider } from "react-redux";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { v4 as uuidv4 } from "uuid";
 import createSagaMiddleware from "redux-saga";
+import { feature as featureReducer } from "./Store/Feature/reducers";
 import { record as recordReducer } from "./Store/Record/reducers";
 import { Robot, Tasks } from "./Classes/Robot";
 import { Factory } from "./Components/Application";
@@ -28,6 +29,14 @@ const EMPTY_DATA_STATE = {
 		{},
 	),
 };
+const EMPTY_FEATURE_STATE = {
+	factory: {
+		intervalPerBarMinersId: {},
+		intervalPerByersId: {},
+		intervalPerFooMinersId: {},
+		intervalPerFoobarEngineersId: {},
+	},
+};
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [];
 middlewares.push(sagaMiddleware);
@@ -37,6 +46,7 @@ if (process.env.NODE_ENV === "development") {
 
 const store = createStore(
 	combineReducers({
+		feature: featureReducer(EMPTY_FEATURE_STATE),
 		record: recordReducer(EMPTY_DATA_STATE),
 	}),
 	applyMiddleware(...middlewares),
@@ -47,7 +57,7 @@ sagaMiddleware.run(sagasForFactory);
 const App = () => (
 	<StoreProvider store={store}>
 		<CssBaseline />
-		<Factory />
+		<Factory label="factory" />
 	</StoreProvider>
 );
 
