@@ -1,4 +1,7 @@
 {
 	"Application": {
+		"Header": {
+			"title": "Foobar Factory"
+		}
 	}
 }
