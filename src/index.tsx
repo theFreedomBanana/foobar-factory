@@ -9,7 +9,7 @@ import createSagaMiddleware from "redux-saga";
 import { feature as featureReducer } from "./Store/Feature/reducers";
 import { record as recordReducer } from "./Store/Record/reducers";
 import { Robot, Tasks } from "./Classes/Robot";
-import { Factory } from "./Components/Application";
+import { Factory } from "./Components/Features/Factory";
 import { sagasForFactory } from "./Store/sagas";
 
 const ROBOTS: Robot[] = new Array(2).fill({ class: "robot" }).map((robot) => ({
