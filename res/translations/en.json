@@ -3,5 +3,13 @@
 		"Header": {
 			"title": "Foobar Factory"
 		}
+	},
+	"Feature": {
+		"RobotManagment": {
+			"destinationTaskLabel": "To",
+			"error": "Ce champ est obligatoire",
+			"initialTaskLabel": "Pick a robot from",
+			"validate": "Put to work"
+		}
 	}
 }

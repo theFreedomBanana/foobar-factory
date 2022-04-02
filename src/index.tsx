@@ -6,8 +6,9 @@ import logger from "redux-logger";
 import { Provider as StoreProvider } from "react-redux";
 import { initReactI18next } from "react-i18next";
 import { createStore, combineReducers, applyMiddleware } from "redux";
-import { v4 as uuidv4 } from "uuid";
+import { reducer as formReducer } from "redux-form";
 import createSagaMiddleware from "redux-saga";
+import { v4 as uuidv4 } from "uuid";
 import enTranslations from "../res/translations/en.json";
 import { feature as featureReducer } from "./Store/Feature/reducers";
 import { record as recordReducer } from "./Store/Record/reducers";
@@ -51,6 +52,7 @@ if (process.env.NODE_ENV === "development") {
 const store = createStore(
 	combineReducers({
 		feature: featureReducer(EMPTY_FEATURE_STATE),
+		form: formReducer,
 		record: recordReducer(EMPTY_DATA_STATE),
 	}),
 	applyMiddleware(...middlewares),
