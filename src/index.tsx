@@ -1,14 +1,18 @@
 import { CssBaseline } from "@material-ui/core";
 import React from "react";
 import ReactDOM from "react-dom";
+import i18n from "i18next";
 import logger from "redux-logger";
 import { Provider as StoreProvider } from "react-redux";
+import { initReactI18next } from "react-i18next";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { v4 as uuidv4 } from "uuid";
 import createSagaMiddleware from "redux-saga";
+import enTranslations from "../res/translations/en.json";
 import { feature as featureReducer } from "./Store/Feature/reducers";
 import { record as recordReducer } from "./Store/Record/reducers";
 import { Robot, Tasks } from "./Classes/Robot";
+import { Dasboard } from "./Components/Application";
 import { Factory } from "./Components/Features/Factory";
 import { sagasForFactory } from "./Store/sagas";
 
@@ -58,10 +62,23 @@ const App = () => (
 	<StoreProvider store={store}>
 		<CssBaseline />
 		<Factory label="factory" />
+		<Dasboard />
 	</StoreProvider>
 );
 
-ReactDOM.render(
-	<App />,
-	document.getElementById("root"),
-);
+i18n.use(initReactI18next).init({
+	fallbackLng: "en",
+	interpolation: {
+		escapeValue: false,
+	},
+	lng: "en",
+	resources: {
+		en: enTranslations,
+	},
+}).then(() => {
+	ReactDOM.render(
+		<App />,
+		document.getElementById("root"),
+	);
+});
+
