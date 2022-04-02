@@ -14,7 +14,7 @@ interface RecordsActionParams {
 }
 
 function* mining(actionParams: RecordsActionParams) {
-	yield put({ records: actionParams.records, type: RECORD_ACTIONS.CREATE_RECORDS });
+	yield put({ records: actionParams.records, type: RECORD_ACTIONS.UPDATE_RECORDS });
 }
 
 function* useRecords(actionParams: RecordsActionParams) {

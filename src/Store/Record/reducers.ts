@@ -12,7 +12,7 @@ export const record = (
 	state = EMPTY_STATE,
 	payload: { records: ValueOf<ClassEnumeration>[]; type: RECORD_ACTIONS },
 ) => {
-	if (payload.type === RECORD_ACTIONS.CREATE_RECORDS) {
+	if (payload.type === RECORD_ACTIONS.UPDATE_RECORDS) {
 		const nextState = {
 			...state,
 			[payload.records[0].class]: {
