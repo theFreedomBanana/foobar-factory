@@ -5,6 +5,14 @@
 		}
 	},
 	"Feature": {
+		"RobotAnalysis": {
+			"barMiners": "Bar miners",
+			"byers": "Byers",
+			"fooMiners": "Foo miners",
+			"foobarEngineers": "Foobar engineers",
+			"iddleRobots": "Unemployed",
+			"title": "Robots"
+		},
 		"RobotManagment": {
 			"destinationTaskLabel": "To",
 			"error": "Ce champ est obligatoire",

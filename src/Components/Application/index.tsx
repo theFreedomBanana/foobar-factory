@@ -1,11 +1,13 @@
 import { createStyles, Grid, withStyles, WithStyles } from "@material-ui/core";
 import React, { memo } from "react";
+import { RobotAnalysis } from "../Features/RobotAnalysis";
 import { RobotManagment } from "../Features/RobotManagment";
 import { Header } from "./Header";
 
 const styles = () => createStyles({
 	dashboard: { display: "flex", flexDirection: "column", height: "100vh" },
 	dashboard__leftPanel: { borderRight: "1px solid black", padding: "1rem" },
+	dashboard__rightPanel: { padding: "1rem" },
 	dashboard__section: { height: "inherit" },
 });
 
@@ -19,7 +21,12 @@ export const Dasboard = withStyles(styles)(
 					<Grid className={classes.dashboard__leftPanel} item md={4}>
 						<RobotManagment label="robotManagment" />
 					</Grid>
-					<Grid item md={8}>
+					<Grid className={classes.dashboard__leftPanel} item md={8}>
+						<Grid container>
+							<Grid item md={12}>
+								<RobotAnalysis />
+							</Grid>
+						</Grid>
 					</Grid>
 				</Grid>
 			</div>
