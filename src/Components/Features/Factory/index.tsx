@@ -110,19 +110,23 @@ const application = memo(
 		useEffect(
 			() => {
 				if (previousProps?.fooMiners !== fooMiners) {
-					const newIntervalPerFooMinersId = { ...intervalPerFooMinersId };
-					const intervalsToDelete = Object.entries(intervalPerFooMinersId || {}).filter(
-						([oldMinerId]) => !(fooMiners?.find(({ id }) => oldMinerId === id)),
-					).map(([oldMinerId, interval]) => {
-						delete newIntervalPerFooMinersId[oldMinerId];
-
-						return interval;
-					});
-					intervalsToDelete.forEach((interval) => clearInterval(interval));
-					const newMiners = fooMiners?.filter((miner) => !Object.keys(intervalPerFooMinersId || {}).find(
-						(minerId) => minerId === miner.id,
+					Object.entries(intervalPerFooMinersId || {}).forEach(
+						([oldMinerId]) => {
+							if (!(fooMiners?.find(({ id }) => oldMinerId === id))) {
+								clearTimeout(intervalPerFooMinersId[oldMinerId]);
+								dispatch({
+									data: {
+										intervalPerFooMinersId: { [oldMinerId]: undefined },
+									},
+									label,
+									type: FEATURE_ACTIONS.DELETE_ROBOTS_INTERVALS,
+								});
+							}
+						}
+					);
+					const newMiners = fooMiners?.filter((miner) => (
+						!previousProps?.fooMiners?.find(({ id }) => id === miner.id)
 					));
-
 					newMiners?.forEach(({ id }) => {
 						const interval = setInterval(
 							() => {
@@ -130,13 +134,13 @@ const application = memo(
 							},
 							1000,
 						);
-						newIntervalPerFooMinersId[id] = interval;
-					});
-
-					dispatch({
-						intervalPerFooMinersId: newIntervalPerFooMinersId,
-						label,
-						type: FEATURE_ACTIONS.UPDATE_FEATURE,
+						dispatch({
+							data: {
+								intervalPerFooMinersId: { [id]: interval },
+							},
+							label,
+							type: FEATURE_ACTIONS.UPDATE_ROBOTS_INTERVALS,
+						});
 					});
 				}
 			},
@@ -146,31 +150,39 @@ const application = memo(
 		useEffect(
 			() => {
 				if (previousProps?.barMiners !== barMiners) {
-					const newIntervalPerBarMinersId = { ...intervalPerBarMinersId };
-					const intervalsToDelete = Object.entries(intervalPerBarMinersId || {}).filter(
-						([oldMinerId]) => !(barMiners?.find(({ id }) => oldMinerId === id)),
-					).map(([oldMinerId, interval]) => {
-						delete newIntervalPerBarMinersId[oldMinerId];
-
-						return interval;
-					});
-					intervalsToDelete.forEach((interval) => clearInterval(interval));
-					const newMiners = barMiners?.filter((miner) => !Object.keys(intervalPerBarMinersId || {}).find(
-						(minerId) => minerId === miner.id,
+					Object.entries(intervalPerBarMinersId || {}).forEach(
+						([oldMinerId]) => {
+							if (!(barMiners?.find(({ id }) => oldMinerId === id))) {
+								clearTimeout(intervalPerBarMinersId[oldMinerId]);
+								dispatch({
+									data: {
+										intervalPerBarMinersId: { [oldMinerId]: undefined },
+									},
+									label,
+									type: FEATURE_ACTIONS.DELETE_ROBOTS_INTERVALS,
+								});
+							}
+						}
+					);
+					const newMiners = barMiners?.filter((miner) => (
+						!previousProps?.barMiners?.find(({ id }) => id === miner.id)
 					));
-
-					newMiners?.forEach(({ id }) => {
+					newMiners?.forEach((miner) => {
 						customSetInterval({
-							callback: () => dispatch({ records: [{ class: "bar", id: uuidv4() }], type: RECORD_ACTIONS.MINING }),
-							getTimeoutIdentifier: (identifier) => newIntervalPerBarMinersId[id] = identifier,
-							intervalDuration: randomNumberBetween({ maxValue: 2, minValue: 0.5 }),
+							callback: () => {
+								dispatch({ records: [{ class: "bar", id: uuidv4() }], type: RECORD_ACTIONS.MINING });
+							},
+							getTimeoutIdentifier: (identifier) => {
+								dispatch({
+									data: {
+										intervalPerBarMinersId: { [miner.id]: identifier },
+									},
+									label,
+									type: FEATURE_ACTIONS.UPDATE_ROBOTS_INTERVALS,
+								});
+							},
+							setIntervalDuration: () => randomNumberBetween({ maxValue: 2, minValue: 0.5 }) * 1000,
 						});
-					});
-
-					dispatch({
-						intervalPerBarMinersId: newIntervalPerBarMinersId,
-						label,
-						type: FEATURE_ACTIONS.UPDATE_FEATURE,
 					});
 				}
 			},
@@ -180,35 +192,37 @@ const application = memo(
 		useEffect(
 			() => {
 				if (previousProps?.foobarEngineers !== foobarEngineers) {
-					const newIntervalPerFoobarEngineersId = { ...intervalPerFoobarEngineersId };
-					const intervalsToDelete = Object.entries(intervalPerFoobarEngineersId || {}).filter(
-						([oldEngineerId]) => !(foobarEngineers?.find(({ id }) => oldEngineerId === id)),
-					).map(([oldEngineerId, interval]) => {
-						delete newIntervalPerFoobarEngineersId[oldEngineerId];
-
-						return interval;
-					});
-					intervalsToDelete.forEach((interval) => clearInterval(interval));
-					const newEngineers = foobarEngineers?.filter(
-						(engineer) => !Object.keys(intervalPerFoobarEngineersId || {}).find(
-							(engineerId) => engineerId === engineer.id,
-						),
+					Object.entries(intervalPerFoobarEngineersId || {}).forEach(
+						([oldMinerId]) => {
+							if (!(foobarEngineers?.find(({ id }) => oldMinerId === id))) {
+								clearTimeout(intervalPerFoobarEngineersId[oldMinerId]);
+								dispatch({
+									data: {
+										intervalPerFoobarEngineersId: { [oldMinerId]: undefined },
+									},
+									label,
+									type: FEATURE_ACTIONS.DELETE_ROBOTS_INTERVALS,
+								});
+							}
+						}
 					);
-
-					newEngineers?.forEach(({ id }) => {
+					const newMiners = foobarEngineers?.filter((miner) => (
+						!previousProps?.foobarEngineers?.find(({ id }) => id === miner.id)
+					));
+					newMiners?.forEach(({ id }) => {
 						const interval = setInterval(
 							() => {
-								dispatch({ records: [{ class: "foobar", id: uuidv4() }], type: RECORD_ACTIONS.MINING });
+								dispatch({ records: [{ class: "foobar", id: uuidv4() }], type: RECORD_ACTIONS.ASSEMBLING });
 							},
 							1000,
 						);
-						newIntervalPerFoobarEngineersId[id] = interval;
-					});
-
-					dispatch({
-						intervalPerFoobarEngineersId: newIntervalPerFoobarEngineersId,
-						label,
-						type: FEATURE_ACTIONS.UPDATE_FEATURE,
+						dispatch({
+							data: {
+								intervalPerFoobarEngineersId: { [id]: interval },
+							},
+							label,
+							type: FEATURE_ACTIONS.UPDATE_ROBOTS_INTERVALS,
+						});
 					});
 				}
 			},
@@ -218,33 +232,37 @@ const application = memo(
 		useEffect(
 			() => {
 				if (previousProps?.byers !== byers) {
-					const newIntervalPerByersId = { ...intervalPerByersId };
-					const intervalsToDelete = Object.entries(intervalPerByersId || {}).filter(
-						([oldByerId]) => !(byers?.find(({ id }) => oldByerId === id)),
-					).map(([oldByerId, interval]) => {
-						delete newIntervalPerByersId[oldByerId];
-
-						return interval;
-					});
-					intervalsToDelete.forEach((interval) => clearInterval(interval));
-					const newByers = byers?.filter((byer) => !Object.keys(intervalPerByersId || {}).find(
-						(byerId) => byerId === byer.id,
+					Object.entries(intervalPerByersId || {}).forEach(
+						([oldMinerId]) => {
+							if (!(byers?.find(({ id }) => oldMinerId === id))) {
+								clearTimeout(intervalPerByersId[oldMinerId]);
+								dispatch({
+									data: {
+										intervalPerByersId: { [oldMinerId]: undefined },
+									},
+									label,
+									type: FEATURE_ACTIONS.DELETE_ROBOTS_INTERVALS,
+								});
+							}
+						}
+					);
+					const newMiners = byers?.filter((miner) => (
+						!previousProps?.byers?.find(({ id }) => id === miner.id)
 					));
-
-					newByers?.forEach(({ id }) => {
+					newMiners?.forEach(({ id }) => {
 						const interval = setInterval(
 							() => {
-								dispatch({ records: [{ class: "robot", id: uuidv4() }], type: RECORD_ACTIONS.MINING });
+								dispatch({ records: [{ class: "robot", currentTask: Tasks.NONE, id: uuidv4() }], type: RECORD_ACTIONS.BUYING });
 							},
 							1000,
 						);
-						newIntervalPerByersId[id] = interval;
-					});
-
-					dispatch({
-						intervalPerByersId: newIntervalPerByersId,
-						label,
-						type: FEATURE_ACTIONS.UPDATE_FEATURE,
+						dispatch({
+							data: {
+								intervalPerByersId: { [id]: interval },
+							},
+							label,
+							type: FEATURE_ACTIONS.UPDATE_ROBOTS_INTERVALS,
+						});
 					});
 				}
 			},

@@ -35,12 +35,7 @@ const EMPTY_DATA_STATE = {
 	),
 };
 const EMPTY_FEATURE_STATE = {
-	factory: {
-		intervalPerBarMinersId: {},
-		intervalPerByersId: {},
-		intervalPerFooMinersId: {},
-		intervalPerFoobarEngineersId: {},
-	},
+	factory: {},
 };
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [];

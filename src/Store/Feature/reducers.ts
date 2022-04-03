@@ -21,6 +21,31 @@ export const feature = (EMPTY_STATE: FeatureState) => (
 		};
 
 		return nextState;
+	} else if (type === FEATURE_ACTIONS.UPDATE_FACTORY_INTERVALS) {
+		const nextState = {
+			...state,
+			factory: {
+				...state.factory,
+				intervalPerBarMinersId: {
+					...state.factory.intervalPerBarMinersId,
+					...(params as FeatureState["factory"]).intervalPerBarMinersId,
+				},
+				intervalPerByersId: {
+					...state.factory.intervalPerByersId,
+					...(params as FeatureState["factory"]).intervalPerByersId,
+				},
+				intervalPerFooMinersId: {
+					...state.factory.intervalPerFooMinersId,
+					...(params as FeatureState["factory"]).intervalPerFooMinersId,
+				},
+				intervalPerFoobarEngineersId: {
+					...state.factory.intervalPerFoobarEngineersId,
+					...(params as FeatureState["factory"]).intervalPerFoobarEngineersId,
+				},
+			},
+		};
+
+		return nextState;
 	} else {
 
 		return state;

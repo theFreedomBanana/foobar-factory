@@ -1,5 +1,6 @@
 import { all, put, takeEvery } from "redux-saga/effects";
 import { ClassEnumeration, ValueOf } from "../Classes";
+import { FEATURE_ACTIONS } from "./Feature/actions";
 import { RECORD_ACTIONS } from "./Record/actions";
 
 interface RecordsActionParams {
@@ -11,6 +12,20 @@ interface RecordsActionParams {
 	 * The called action
 	 */
 	readonly type: RECORD_ACTIONS;
+}
+interface FeatureActionParams {
+	/**
+	 * The parameters to edit in the related feature
+	 */
+	readonly data: { [index: string]: unknown };
+	/**
+	 * The name / mounting point in the store of the related feature
+	 */
+	readonly label: string;
+	/**
+	 * The called action
+	 */
+	readonly type: FEATURE_ACTIONS;
 }
 
 function* mining(actionParams: RecordsActionParams) {
@@ -25,6 +40,11 @@ function* useRecords(actionParams: RecordsActionParams) {
 	}
 }
 
+function* updateFeature(actionParams: FeatureActionParams) {
+	const { data, label } = actionParams;
+	yield put({ label, type: FEATURE_ACTIONS.UPDATE_FACTORY_INTERVALS, ...data });
+}
+
 export function* sagaForMining() {
 	yield takeEvery([RECORD_ACTIONS.MINING], mining);
 }
@@ -33,9 +53,14 @@ export function* sagaForAssembling() {
 	yield takeEvery([RECORD_ACTIONS.ASSEMBLING, RECORD_ACTIONS.BUYING], useRecords);
 }
 
+export function* sagaForUpdatingIntervals() {
+	yield takeEvery([FEATURE_ACTIONS.UPDATE_ROBOTS_INTERVALS, FEATURE_ACTIONS.DELETE_ROBOTS_INTERVALS], updateFeature);
+}
+
 export function* sagasForFactory() {
 	yield all([
 		sagaForMining(),
 		sagaForAssembling(),
+		sagaForUpdatingIntervals(),
 	]);
 }
