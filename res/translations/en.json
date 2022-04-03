@@ -18,6 +18,12 @@
 			"error": "Ce champ est obligatoire",
 			"initialTaskLabel": "Pick a robot from",
 			"validate": "Put to work"
+		},
+		"StockAnalysis": {
+			"bar": "Bars",
+			"foo": "Foos",
+			"foobar": "Foobars",
+			"title": "Stocks"
 		}
 	}
 }

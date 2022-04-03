@@ -1,6 +1,7 @@
 import { createStyles, Grid, withStyles, WithStyles } from "@material-ui/core";
 import React, { memo } from "react";
 import { RobotAnalysis } from "../Features/RobotAnalysis";
+import { StockAnalysis } from "../Features/StockAnalysis";
 import { RobotManagment } from "../Features/RobotManagment";
 import { Header } from "./Header";
 
@@ -25,6 +26,9 @@ export const Dasboard = withStyles(styles)(
 						<Grid container>
 							<Grid item md={12}>
 								<RobotAnalysis />
+							</Grid>
+							<Grid item md={12}>
+								<StockAnalysis />
 							</Grid>
 						</Grid>
 					</Grid>
