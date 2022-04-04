@@ -133,7 +133,7 @@ export const RobotManagment = connect(mapStateToProps)(
 							robotToAssign.currentTask = destinationTask;
 						}
 
-						dispatch({ records: [robotToAssign], type: ACTIONS.UPDATE_RECORDS });
+						dispatch({ records: [robotToAssign], type: ACTIONS.MOVE_ROBOT_TO_OTHER_TASK });
 						dispatch(reset(label));
 					},
 					validate: (formValue: FormValue) => {

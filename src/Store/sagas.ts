@@ -1,4 +1,4 @@
-import { all, put, takeEvery } from "redux-saga/effects";
+import { all, delay, put, takeEvery } from "redux-saga/effects";
 import { ClassEnumeration, ValueOf } from "../Classes";
 import { FEATURE_ACTIONS } from "./Feature/actions";
 import { RECORD_ACTIONS } from "./Record/actions";
@@ -45,6 +45,18 @@ function* updateFeature(actionParams: FeatureActionParams) {
 	yield put({ label, type: FEATURE_ACTIONS.UPDATE_FACTORY_INTERVALS, ...data });
 }
 
+function* updateRobotTask(actionParams: RecordsActionParams) {
+	yield put({
+		records: actionParams.records.map((robot) => ({ ...robot, transiting: true })),
+		type: RECORD_ACTIONS.UPDATE_RECORDS,
+	});
+	yield delay(5000);
+	yield put({
+		records: actionParams.records.map((robot) => ({ ...robot, transiting: false })),
+		type: RECORD_ACTIONS.UPDATE_RECORDS,
+	});
+}
+
 export function* sagaForMining() {
 	yield takeEvery([RECORD_ACTIONS.MINING], mining);
 }
@@ -57,10 +69,15 @@ export function* sagaForUpdatingIntervals() {
 	yield takeEvery([FEATURE_ACTIONS.UPDATE_ROBOTS_INTERVALS, FEATURE_ACTIONS.DELETE_ROBOTS_INTERVALS], updateFeature);
 }
 
+export function* sagaForMovingRobotToOtherTask() {
+	yield takeEvery([RECORD_ACTIONS.MOVE_ROBOT_TO_OTHER_TASK], updateRobotTask);
+}
+
 export function* sagasForFactory() {
 	yield all([
 		sagaForMining(),
 		sagaForAssembling(),
 		sagaForUpdatingIntervals(),
+		sagaForMovingRobotToOtherTask(),
 	]);
 }

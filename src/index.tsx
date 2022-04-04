@@ -21,6 +21,7 @@ const ROBOTS: Robot[] = new Array(2).fill({ class: "robot" }).map((robot) => ({
 	...robot,
 	currentTask: Tasks.NONE,
 	id: uuidv4(),
+	transiting: false,
 }));
 
 const EMPTY_DATA_STATE = {

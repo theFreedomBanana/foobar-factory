@@ -124,9 +124,11 @@ const application = memo(
 							}
 						}
 					);
-					const newMiners = fooMiners?.filter((miner) => (
-						!previousProps?.fooMiners?.find(({ id }) => id === miner.id)
-					));
+					const newMiners = fooMiners?.filter((miner) => miner.transiting === false)
+						.filter((miner) => (
+							!previousProps?.fooMiners?.find(({ id }) => id === miner.id)
+							|| previousProps?.fooMiners?.find(({ id }) => id === miner.id)?.transiting === true
+						));
 					newMiners?.forEach(({ id }) => {
 						const interval = setInterval(
 							() => {
@@ -164,9 +166,11 @@ const application = memo(
 							}
 						}
 					);
-					const newMiners = barMiners?.filter((miner) => (
-						!previousProps?.barMiners?.find(({ id }) => id === miner.id)
-					));
+					const newMiners = barMiners?.filter((miner) => miner.transiting === false)
+						.filter((miner) => (
+							!previousProps?.barMiners?.find(({ id }) => id === miner.id)
+							|| previousProps?.barMiners?.find(({ id }) => id === miner.id)?.transiting === true
+						));
 					newMiners?.forEach((miner) => {
 						customSetInterval({
 							callback: () => {
@@ -206,9 +210,11 @@ const application = memo(
 							}
 						}
 					);
-					const newMiners = foobarEngineers?.filter((miner) => (
-						!previousProps?.foobarEngineers?.find(({ id }) => id === miner.id)
-					));
+					const newMiners = foobarEngineers?.filter((miner) => miner.transiting === false)
+						.filter((miner) => (
+							!previousProps?.foobarEngineers?.find(({ id }) => id === miner.id)
+							|| previousProps?.foobarEngineers?.find(({ id }) => id === miner.id)?.transiting === true
+						));
 					newMiners?.forEach(({ id }) => {
 						const interval = setInterval(
 							() => {
@@ -246,9 +252,11 @@ const application = memo(
 							}
 						}
 					);
-					const newMiners = byers?.filter((miner) => (
-						!previousProps?.byers?.find(({ id }) => id === miner.id)
-					));
+					const newMiners = byers?.filter((miner) => miner.transiting === false)
+						.filter((miner) => (
+							!previousProps?.byers?.find(({ id }) => id === miner.id)
+							|| previousProps?.byers?.find(({ id }) => id === miner.id)?.transiting === true
+						));
 					newMiners?.forEach(({ id }) => {
 						const interval = setInterval(
 							() => {

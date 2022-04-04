@@ -8,6 +8,10 @@ export interface Robot extends Class<"robot"> {
 	 * The task the robot is assigned;
 	 */
 	currentTask: Tasks;
+	/**
+	 * True when the robot is moving from one task to another, false otherwise
+	 */
+	transiting: boolean;
 }
 
 /**
